@@ -10,6 +10,18 @@
 
 **Pre-execution refinement:** Before starting, re-read spec [Sections 7 (Block system), 13 (Performance), 17 (Error handling — save race)](../specs/2026-04-28-backdesk-v1-design.md). Verify Plan 2's `Collection` class is in place and confirm its `list/getRow/count` signatures haven't drifted from what's referenced here. Run `pnpm dlx shadcn@latest search @plate -q "editor"` to confirm the `@plate` registry is reachable.
 
+**Refinement notes from Plans 1 + 2 execution (2026-04-29):**
+- **shadcn CLI must use `-c apps/web` flag in this monorepo.** `pnpm dlx shadcn@latest add @plate/...` from the project root will silently fail or scaffold to the wrong location. Always: `pnpm dlx shadcn@latest add @plate/<thing> -c apps/web --yes`.
+- **Server Action `Result`/`Err` pattern** is established (see `apps/web/actions/pages.ts`). Reuse it for new actions. Schema validation via `zod`, mutations end with `revalidatePath` + return `{ ok: true }`.
+- **`router.refresh()` pattern after mutations**: client components that fire mutations need to follow `optimistic setState → server action → router.refresh() on success`. We learned this the hard way in Plan 2 when row edits didn't propagate.
+- **Supabase Json type casts**: `as Json` (from `@/lib/supabase/types`) is needed when writing JSONB columns from TS. The `data`, `options`, `config` columns on collection_fields/rows/views all hit this. Plate's `document` JSONB will too — anticipate.
+- **`SelectItem` empty-string limitation**: shadcn `SelectItem` rejects `value=""`. Use a sentinel like `__none__` and unmap in `onValueChange` for "no selection" cases. Block settings sheets in Tasks 7-10 will use Select.
+- **Plate API surface drift**: import paths (`platejs/react` vs `@udecode/plate/react`) and event subscription mechanism (`editor.api.on('change', ...)` vs `editor.tf.onChange`) depend on the version installed. After install, run `cat node_modules/platejs/package.json | grep version` and verify the actual exported API before writing the wrapper. The wrapper *shape* (Plate provider + PlateContent + save loop) is what matters — adapt the names.
+- **`Collection.load()` only fetches `id, name`**. The Card/Chart/Table/Row blocks query through `/api/aggregate`, `/api/collections`, `/api/collections/[id]/rows`, `/api/collections/[id]/fields` route handlers (Plan 3 introduces these). API routes are a small deviation from the spec's "Server Actions for everything" rule — justified because client-side block components need to fetch on prop changes after the page is rendered. Document this in the task notes.
+- **`filters.ts` SQL builders are dead code currently** — Plan 3's `aggregate()` uses the same JS-fallback path as `list()`. Performance is fine for v1 volumes; Plan 4 may want to wire the SQL path via `rpc()` for trading data scale.
+- **Migration filenames**: continue the deterministic-timestamp pattern (`20260430000001_*` for Plan 3 tables, if any).
+- **Verbatim plan code can skip code-quality review** when typecheck/lint/E2E are clean. Only run formal review when meaningful design decisions were made.
+
 ---
 
 ## File structure created in this plan
