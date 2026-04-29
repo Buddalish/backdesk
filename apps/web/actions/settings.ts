@@ -35,6 +35,7 @@ export async function updateAppearance(input: z.infer<typeof AppearanceSchema>) 
   if (!user) return Err("UNAUTHENTICATED", "Sign in.");
   const { error } = await supabase.from("profiles").update(parsed.data).eq("user_id", user.id);
   if (error) return Err("UPDATE_FAILED", error.message);
+  revalidatePath("/", "layout");
   return Result({});
 }
 

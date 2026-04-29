@@ -83,7 +83,16 @@ export function useCommands(pages: PageRow[]): Command[] {
     { id: "theme-system", group: "Settings", label: "Theme: System", run: () => setTheme("system") },
 
     // Account
-    { id: "sign-out", group: "Account", label: "Sign out", run: () => signOut() },
+    {
+      id: "sign-out",
+      group: "Account",
+      label: "Sign out",
+      run: async () => {
+        try { await signOut(); } catch { /* server action redirect() throws — expected */ }
+        router.push("/sign-in");
+        router.refresh();
+      },
+    },
   ];
   return commands;
 }
