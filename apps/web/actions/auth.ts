@@ -30,3 +30,26 @@ export async function signUp(formData: FormData) {
 
   redirect("/");
 }
+
+const SignInSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(1),
+});
+
+export async function signIn(formData: FormData) {
+  const parsed = SignInSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success) {
+    return { ok: false as const, error: { code: "INVALID_INPUT", message: parsed.error.issues[0]!.message } };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  if (error) {
+    return { ok: false as const, error: { code: "SIGN_IN_FAILED", message: error.message } };
+  }
+
+  redirect("/");
+}
