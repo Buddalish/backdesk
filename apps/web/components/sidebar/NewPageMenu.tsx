@@ -14,6 +14,8 @@ import {
 import { Button } from "@workspace/ui/components/button";
 import { toast } from "sonner";
 import { createPage } from "@/actions/pages";
+import { ImportSheet } from "@/components/connections/ImportSheet";
+import { connections } from "@/lib/connections";
 
 export function NewPageMenu() {
   const [isPending, startTransition] = useTransition();
@@ -53,7 +55,13 @@ export function NewPageMenu() {
         <DropdownMenuItem disabled>Templates ship in Plan 3</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Connections</DropdownMenuLabel>
-        <DropdownMenuItem disabled>Importers ship in Plan 4</DropdownMenuItem>
+        {connections.map((c) => (
+          <ImportSheet key={c.id} defaultConnectionId={c.id}>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              Import — {c.displayName}
+            </DropdownMenuItem>
+          </ImportSheet>
+        ))}
       </DropdownMenuContent>
     </DropdownMenu>
   );

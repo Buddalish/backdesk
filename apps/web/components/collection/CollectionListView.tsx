@@ -15,6 +15,8 @@ import { FieldHeader } from "./FieldHeader";
 import { addRow, updateRowField } from "@/actions/collections";
 import { updateView } from "@/actions/views";
 import type { Field, Row, Sort, Filter } from "@/lib/collections/types";
+import { ImportSheet } from "@/components/connections/ImportSheet";
+import { Upload } from "lucide-react";
 
 export function CollectionListView({
   page, collection, view, initialRows,
@@ -65,6 +67,14 @@ export function CollectionListView({
         >
           <Button variant="outline" size="sm">Filter</Button>
         </FilterPopover>
+        {collection.managedByConnection && (
+          <ImportSheet defaultConnectionId={collection.managedByConnection}>
+            <Button variant="outline" size="sm">
+              <Upload data-icon="inline-start" />
+              Import
+            </Button>
+          </ImportSheet>
+        )}
       </div>
 
       {rows.length === 0 && visible.length === 0 ? (
