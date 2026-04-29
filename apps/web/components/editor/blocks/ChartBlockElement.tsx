@@ -62,11 +62,7 @@ export function ChartBlockElement(props: any) {
           open={open} onOpenChange={setOpen}
           props={cfg}
           onSave={(next) => {
-            try {
-              props.editor.tf.setNodes({ chartProps: next }, { at: props.path });
-            } catch {
-              props.editor.api?.setNodes?.({ chartProps: next }, { at: props.path });
-            }
+            props.editor.tf.setNodes({ chartProps: next }, { at: props.path });
             setOpen(false);
           }}
         />

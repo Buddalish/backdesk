@@ -13,6 +13,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     .select("*")
     .eq("id", rowId)
     .eq("collection_id", id)
+    .eq("owner_type", "user")
+    .eq("owner_id", user.id)
     .maybeSingle();
   return NextResponse.json(data);
 }

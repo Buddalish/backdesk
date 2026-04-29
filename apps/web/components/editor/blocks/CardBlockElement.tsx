@@ -72,14 +72,7 @@ export function CardBlockElement(props: any) {
           onOpenChange={setOpen}
           props={cfg}
           onSave={(next) => {
-            // Update this element's `cardProps` via Plate's setNodes API.
-            // The exact API is editor.tf.setNodes for v53.
-            try {
-              props.editor.tf.setNodes({ cardProps: next }, { at: props.path });
-            } catch {
-              // Fallback: try editor.api.setNodes if tf.setNodes doesn't exist
-              props.editor.api?.setNodes?.({ cardProps: next }, { at: props.path });
-            }
+            props.editor.tf.setNodes({ cardProps: next }, { at: props.path });
             setOpen(false);
           }}
         />

@@ -82,11 +82,7 @@ export function TableBlockElement(props: any) {
           open={open} onOpenChange={setOpen}
           props={cfg}
           onSave={(next) => {
-            try {
-              props.editor.tf.setNodes({ tableProps: next }, { at: props.path });
-            } catch {
-              props.editor.api?.setNodes?.({ tableProps: next }, { at: props.path });
-            }
+            props.editor.tf.setNodes({ tableProps: next }, { at: props.path });
             setOpen(false);
           }}
         />

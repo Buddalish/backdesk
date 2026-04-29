@@ -21,11 +21,7 @@ export function ImageBlockElement(props: any) {
     const result = await uploadImage(fd);
     setUploading(false);
     if (!result.ok) return;
-    try {
-      props.editor.tf.setNodes({ imageProps: { storagePath: result.data.path, url: result.data.url } }, { at: props.path });
-    } catch {
-      props.editor.api?.setNodes?.({ imageProps: { storagePath: result.data.path, url: result.data.url } }, { at: props.path });
-    }
+    props.editor.tf.setNodes({ imageProps: { storagePath: result.data.path, url: result.data.url } }, { at: props.path });
   }
 
   return (

@@ -47,11 +47,7 @@ export function RowBlockElement(props: any) {
           open={open} onOpenChange={setOpen}
           props={cfg}
           onSave={(next) => {
-            try {
-              props.editor.tf.setNodes({ rowProps: next }, { at: props.path });
-            } catch {
-              props.editor.api?.setNodes?.({ rowProps: next }, { at: props.path });
-            }
+            props.editor.tf.setNodes({ rowProps: next }, { at: props.path });
             setOpen(false);
           }}
         />

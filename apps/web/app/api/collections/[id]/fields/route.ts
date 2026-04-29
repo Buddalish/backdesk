@@ -12,6 +12,8 @@ export async function GET(_req: Request, { params }: { params: Promise<{ id: str
     .from("collection_fields")
     .select("*")
     .eq("collection_id", id)
+    .eq("owner_type", "user")
+    .eq("owner_id", user.id)
     .order("sort_index");
   return NextResponse.json(data ?? []);
 }
