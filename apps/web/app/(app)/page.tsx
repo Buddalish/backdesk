@@ -13,7 +13,7 @@ export default function Home() {
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Once you've added a page, it'll show up in the sidebar.
+            Once you&apos;ve added a page, it&apos;ll show up in the sidebar.
           </p>
         </CardContent>
       </Card>

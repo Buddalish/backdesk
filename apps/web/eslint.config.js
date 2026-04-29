@@ -4,6 +4,11 @@ import { nextJsConfig } from "@workspace/eslint-config/next-js"
 export default [
   ...nextJsConfig,
 
+  // Ignore Next.js auto-generated files
+  {
+    ignores: ["next-env.d.ts"],
+  },
+
   // Restrict admin client imports globally
   {
     files: ["**/*.ts", "**/*.tsx"],

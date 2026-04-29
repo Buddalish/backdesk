@@ -46,7 +46,15 @@ export function SignUpForm() {
         <span className="text-xs text-muted-foreground">OR</span>
         <Separator className="flex-1" />
       </div>
-      <form action={() => { void signInWithGoogle(); }} className="mt-4">
+      <form
+        action={async () => {
+          const result = await signInWithGoogle();
+          if (result && !result.ok) {
+            toast.error(result.error.message);
+          }
+        }}
+        className="mt-4"
+      >
         <Button type="submit" variant="outline" className="w-full">Continue with Google</Button>
       </form>
     </>
