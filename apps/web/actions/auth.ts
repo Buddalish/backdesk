@@ -1,0 +1,32 @@
+"use server";
+import { createClient } from "@/lib/supabase/server";
+import { redirect } from "next/navigation";
+import { z } from "zod";
+
+const SignUpSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(8, "Password must be at least 8 characters"),
+});
+
+export async function signUp(formData: FormData) {
+  const parsed = SignUpSchema.safeParse({
+    email: formData.get("email"),
+    password: formData.get("password"),
+  });
+  if (!parsed.success) {
+    return { ok: false as const, error: { code: "INVALID_INPUT", message: parsed.error.issues[0]!.message } };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signUp({
+    email: parsed.data.email,
+    password: parsed.data.password,
+    options: { emailRedirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/callback` },
+  });
+
+  if (error) {
+    return { ok: false as const, error: { code: "SIGN_UP_FAILED", message: error.message } };
+  }
+
+  redirect("/");
+}
