@@ -20,5 +20,8 @@ export default defineConfig({
     cwd: "../..",
     reuseExistingServer: !process.env.CI,
     timeout: 240_000, // 4 minutes — production build can take ~90s
+    // Plate.js + emoji-mart + Sentry instrumentation push the Next.js prod
+    // server past the default ~2GB Node heap; bump it so E2E stays alive.
+    env: { NODE_OPTIONS: "--max-old-space-size=4096" },
   },
 });
