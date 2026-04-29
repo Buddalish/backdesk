@@ -10,6 +10,19 @@
 
 **Pre-execution refinement:** Before starting, re-read spec [Sections 6 (CSV import + aggregation), 12 (Templates and connections), 15 (Development & seed data)](../specs/2026-04-28-backdesk-v1-design.md). Verify the Plate plugin keys (`card`, `chart`, `data-table`, `data-row`) match what's actually registered in `EditorKit` from Plan 3. If any drifted, update the templates in Tasks 13–15 to match.
 
+**Refinement notes from Plans 1–3 execution (2026-04-29):**
+- **`Collection.load()` only selects `id, name`** — Plan 4's "Import" button on collection pages requires `managed_by_connection`. Extend the select in `apps/web/lib/collections/collection.ts:Collection.load()` to include `managed_by_connection, is_system` (and add corresponding fields on the `Collection` class). The `c/[pageId]/page.tsx` route then forwards these to `CollectionListView` and to its `CollectionHeader` so the import slot can render conditionally.
+- **`aggregateRows` doesn't handle `currency` field type** — currency stores `{ amount, currency_code }`, not a number. Cards/Charts that aggregate `net_pnl` (a currency field on the Trades collection) will silently return `0`. Fix `metricFor` in `apps/web/lib/collections/collection.ts` to extract `v.amount` for currency-shaped values. Add a unit test.
+- **Server Action `Result`/`Err` pattern** is established (`apps/web/actions/pages.ts`, `actions/collections.ts`). Reuse for `runImport` and `applyTemplate`. JSONB writes need `as Json` cast.
+- **`router.refresh()` after mutations** is required for Client Components reading from server-fetched props. The fix from Plan 2's cleanup + Plan 3's `CollectionListView` prop-sync (`useEffect(() => setRows(initialRows), [initialRows])`) is the canonical pattern.
+- **Migration filenames**: deterministic timestamps (`20260430000002_*` for connection_imports — `20260430000001_*` was attachments_bucket). Pattern established.
+- **`SelectItem` empty-string limitation** — use `__none__` sentinel + unmap. Pattern in every settings sheet from Plan 3.
+- **shadcn CLI in monorepo** — always pass `-c apps/web` (Plan 2 lesson; Plan 3 confirmed). Plan 4 doesn't add shadcn components but if you do, remember the flag.
+- **Plate.js plugin keys**: confirmed in editor-kit.tsx — `card`, `chart`, `data-table`, `data-row`, `uploaded-image`, `paragraph`, `h1`-`h3`, etc. Templates reference these by key. The placeholder substitution function in `applyTemplate` (Task 12) walks the document tree and replaces `__TRADES__`, `__TRADES_NETPNL__`, `__TRADES_SYMBOL__`, `__TRADES_CLOSEDAT__` with concrete IDs at instantiation time.
+- **CI runs production build** for E2E (Plan 3 fix). New routes in Plan 4 (`/api/import` if any, settings/connections) will compile fine.
+- **Supabase Studio + Inbucket disabled in CI** for stability. If Plan 4 needs Inbucket for email-link tests, re-enable in `supabase/config.toml`.
+- **Verbatim plan code can skip code-quality review** when typecheck/lint/E2E are clean. Reserve formal review for tasks where the implementer made meaningful design decisions (parser, aggregator).
+
 ---
 
 ## File structure created in this plan
