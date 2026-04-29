@@ -7,7 +7,8 @@
     "dev": "turbo dev",
     "lint": "turbo lint",
     "format": "turbo format",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "db:types": "supabase gen types typescript --local > apps/web/lib/supabase/types.ts"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
