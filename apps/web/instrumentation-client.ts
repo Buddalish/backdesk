@@ -12,6 +12,19 @@ if (dsn) {
       if (event.user) event.user = { id: event.user.id };
       return event;
     },
+    beforeBreadcrumb(breadcrumb) {
+      // Strip query strings from fetch/xhr/navigation breadcrumbs (may contain tokens).
+      if (
+        breadcrumb.category === "fetch" ||
+        breadcrumb.category === "xhr" ||
+        breadcrumb.category === "navigation"
+      ) {
+        if (breadcrumb.data?.url && typeof breadcrumb.data.url === "string") {
+          breadcrumb.data.url = breadcrumb.data.url.split("?")[0];
+        }
+      }
+      return breadcrumb;
+    },
   });
 }
 

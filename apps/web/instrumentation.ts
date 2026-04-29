@@ -6,6 +6,20 @@ export async function register() {
       Sentry.init({
         dsn,
         tracesSampleRate: 0.1,
+        beforeSend(event) {
+          // Strip user PII — capture errors, not who hit them.
+          if (event.user) event.user = { id: event.user.id };
+          // Strip query strings from request URLs (may contain tokens).
+          if (event.request?.url) {
+            event.request.url = event.request.url.split("?")[0];
+          }
+          // Drop request headers + cookies entirely (auth headers, session cookies).
+          if (event.request) {
+            delete event.request.headers;
+            delete event.request.cookies;
+          }
+          return event;
+        },
       });
     }
   }
@@ -17,6 +31,20 @@ export async function register() {
       Sentry.init({
         dsn,
         tracesSampleRate: 0.1,
+        beforeSend(event) {
+          // Strip user PII — capture errors, not who hit them.
+          if (event.user) event.user = { id: event.user.id };
+          // Strip query strings from request URLs (may contain tokens).
+          if (event.request?.url) {
+            event.request.url = event.request.url.split("?")[0];
+          }
+          // Drop request headers + cookies entirely (auth headers, session cookies).
+          if (event.request) {
+            delete event.request.headers;
+            delete event.request.cookies;
+          }
+          return event;
+        },
       });
     }
   }
