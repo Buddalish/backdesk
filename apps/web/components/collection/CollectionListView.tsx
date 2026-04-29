@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@workspace/ui/components/table";
 import { Button } from "@workspace/ui/components/button";
 import { Plus } from "lucide-react";
@@ -25,6 +26,7 @@ export function CollectionListView({
 }) {
   const [rows, setRows] = useState<Row[]>(initialRows);
   const [, startTransition] = useTransition();
+  const router = useRouter();
   const visible = view?.config?.visibleFields?.length
     ? collection.fields.filter((f) => view.config.visibleFields!.includes(f.id))
     : collection.fields;
@@ -33,6 +35,7 @@ export function CollectionListView({
     startTransition(async () => {
       const result = await addRow({ collectionId: collection.id, data: {} });
       if (!result.ok) { toast.error(result.error.message); return; }
+      router.refresh();
     });
   }
 

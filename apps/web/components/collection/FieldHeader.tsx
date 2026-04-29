@@ -1,4 +1,5 @@
 "use client";
+import { useRouter } from "next/navigation";
 import { ArrowUp, ArrowDown, MoreHorizontal, Trash2, Pencil } from "lucide-react";
 import { Button } from "@workspace/ui/components/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@workspace/ui/components/dropdown-menu";
@@ -13,6 +14,8 @@ export function FieldHeader({
   sortDir: "asc" | "desc" | null;
   onClickSort: () => void;
 }) {
+  const router = useRouter();
+
   return (
     <div className="flex items-center gap-1 group">
       <button
@@ -37,7 +40,8 @@ export function FieldHeader({
               const name = window.prompt("Rename field", field.name);
               if (!name) return;
               const result = await renameField({ fieldId: field.id, name });
-              if (!result.ok) toast.error(result.error.message);
+              if (!result.ok) { toast.error(result.error.message); return; }
+              router.refresh();
             }}
           >
             <Pencil data-icon="inline-start" /> Rename
@@ -47,7 +51,8 @@ export function FieldHeader({
             onClick={async () => {
               if (!window.confirm(`Delete "${field.name}" and all its data?`)) return;
               const result = await deleteField({ fieldId: field.id });
-              if (!result.ok) toast.error(result.error.message);
+              if (!result.ok) { toast.error(result.error.message); return; }
+              router.refresh();
             }}
           >
             <Trash2 data-icon="inline-start" /> Delete

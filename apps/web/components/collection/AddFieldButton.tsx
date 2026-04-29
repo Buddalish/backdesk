@@ -1,5 +1,6 @@
 "use client";
 import { useState, useTransition } from "react";
+import { useRouter } from "next/navigation";
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger, SheetFooter } from "@workspace/ui/components/sheet";
 import { Button } from "@workspace/ui/components/button";
 import { Input } from "@workspace/ui/components/input";
@@ -26,6 +27,7 @@ export function AddFieldButton({ collectionId }: { collectionId: string }) {
   const [name, setName] = useState("");
   const [type, setType] = useState<FieldType>("text");
   const [isPending, startTransition] = useTransition();
+  const router = useRouter();
 
   function submit() {
     if (!name.trim()) return;
@@ -35,6 +37,7 @@ export function AddFieldButton({ collectionId }: { collectionId: string }) {
       setOpen(false);
       setName("");
       setType("text");
+      router.refresh();
     });
   }
 
