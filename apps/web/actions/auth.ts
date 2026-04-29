@@ -53,3 +53,22 @@ export async function signIn(formData: FormData) {
 
   redirect("/");
 }
+
+const ResetSchema = z.object({ email: z.string().email() });
+
+export async function requestPasswordReset(formData: FormData) {
+  const parsed = ResetSchema.safeParse({ email: formData.get("email") });
+  if (!parsed.success) {
+    return { ok: false as const, error: { code: "INVALID_INPUT", message: parsed.error.issues[0]!.message } };
+  }
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.resetPasswordForEmail(parsed.data.email, {
+    redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/callback?next=/settings/account`,
+  });
+  if (error) {
+    return { ok: false as const, error: { code: "RESET_FAILED", message: error.message } };
+  }
+
+  return { ok: true as const, data: { sent: true } };
+}
