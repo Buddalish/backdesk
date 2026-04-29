@@ -9,7 +9,8 @@
     "format": "turbo format",
     "typecheck": "turbo typecheck",
     "db:types": "supabase gen types typescript --local > apps/web/lib/supabase/types.ts",
-    "test": "turbo test"
+    "test": "turbo test",
+    "test:e2e": "pnpm --filter web exec playwright test"
   },
   "devDependencies": {
     "@workspace/eslint-config": "workspace:*",
