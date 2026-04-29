@@ -7,16 +7,28 @@ export class Collection {
     public readonly id: string,
     public readonly name: string,
     public readonly fields: Field[],
+    public readonly managedByConnection: string | null = null,
+    public readonly isSystem: boolean = false,
   ) {}
 
   static async load(collectionId: string): Promise<Collection> {
     const supabase = await createServerSupabase();
     const [{ data: meta }, { data: fields }] = await Promise.all([
-      supabase.from("collections").select("id, name").eq("id", collectionId).single(),
+      supabase
+        .from("collections")
+        .select("id, name, managed_by_connection, is_system")
+        .eq("id", collectionId)
+        .single(),
       supabase.from("collection_fields").select("*").eq("collection_id", collectionId).order("sort_index"),
     ]);
     if (!meta) throw new Error("Collection not found");
-    return new Collection(meta.id, meta.name, (fields ?? []) as unknown as Field[]);
+    return new Collection(
+      meta.id,
+      meta.name,
+      (fields ?? []) as unknown as Field[],
+      meta.managed_by_connection ?? null,
+      meta.is_system ?? false,
+    );
   }
 
   fieldsById(): Record<string, Field> {

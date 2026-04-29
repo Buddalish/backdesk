@@ -20,7 +20,7 @@ export function CollectionListView({
   page, collection, view, initialRows,
 }: {
   page: { id: string; title: string; emoji: string | null };
-  collection: { id: string; name: string; fields: Field[] };
+  collection: { id: string; name: string; fields: Field[]; managedByConnection: string | null; isSystem: boolean };
   view: { id: string; config: { sort?: unknown; filters?: unknown; visibleFields?: string[] } };
   initialRows: Row[];
 }) {

@@ -30,7 +30,13 @@ export default async function CollectionPage({ params }: { params: Promise<{ pag
   return (
     <CollectionListView
       page={page as { id: string; title: string; emoji: string | null }}
-      collection={{ id: collection.id, name: collection.name, fields: collection.fields }}
+      collection={{
+        id: collection.id,
+        name: collection.name,
+        fields: collection.fields,
+        managedByConnection: collection.managedByConnection,
+        isSystem: collection.isSystem,
+      }}
       view={view as { id: string; config: { sort?: import("@/lib/collections/types").Sort[]; filters?: import("@/lib/collections/types").Filter[]; visibleFields?: string[] } }}
       initialRows={initialRows}
     />
