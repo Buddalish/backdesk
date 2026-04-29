@@ -38,6 +38,7 @@ import { SuggestionKit } from './plugins/suggestion-kit';
 import { TableKit } from './plugins/table-kit';
 import { TocKit } from './plugins/toc-kit';
 import { ToggleKit } from './plugins/toggle-kit';
+import { CardPlugin } from './plugins/card-plugin';
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any -- remark-stringify types cause "cannot be named" errors across module boundaries
 export const EditorKit: any[] = [
@@ -58,6 +59,7 @@ export const EditorKit: any[] = [
   ...DateKit,
   ...LinkKit,
   ...MentionKit,
+  CardPlugin,
 
   // Marks
   ...BasicMarksKit,
