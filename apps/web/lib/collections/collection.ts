@@ -59,6 +59,12 @@ export class Collection {
     if (error) throw new Error(error.message);
     return (data ?? null) as unknown as Row | null;
   }
+
+  async aggregate(spec: AggregateSpec): Promise<AggregateResult> {
+    const rows = await this.list({ filters: spec.filters });
+    const fieldsById = this.fieldsById();
+    return aggregateRows(rows, fieldsById, spec);
+  }
 }
 
 function applyFiltersInJS(rows: Row[], filters: Filter[], fields: Record<string, Field>): Row[] {
@@ -104,4 +110,68 @@ function compareValues(a: unknown, b: unknown): number {
   if (b === null || b === undefined) return -1;
   if (typeof a === "number" && typeof b === "number") return a - b;
   return String(a).localeCompare(String(b));
+}
+
+// === Aggregation (added in Plan 3) ===
+
+export type AggregateMetric =
+  | { kind: "count" }
+  | { kind: "sum"; fieldId: string }
+  | { kind: "avg"; fieldId: string }
+  | { kind: "min"; fieldId: string }
+  | { kind: "max"; fieldId: string };
+
+export type AggregateSpec = {
+  metric: AggregateMetric;
+  filters?: Filter[];
+  groupBy?: string[];
+};
+
+export type AggregateResult =
+  | { value: number }
+  | { groups: Array<{ key: Record<string, string>; value: number }> };
+
+export function aggregateRows(
+  rows: Row[],
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  _fields: Record<string, Field>,
+  spec: AggregateSpec,
+): AggregateResult {
+  function metricFor(group: Row[]): number {
+    if (spec.metric.kind === "count") return group.length;
+    const fid = spec.metric.fieldId;
+    const values = group
+      .map((r) => r.data[fid])
+      .filter((v): v is number => typeof v === "number");
+    if (values.length === 0) return 0;
+    switch (spec.metric.kind) {
+      case "sum": return values.reduce((a, b) => a + b, 0);
+      case "avg": return values.reduce((a, b) => a + b, 0) / values.length;
+      case "min": return Math.min(...values);
+      case "max": return Math.max(...values);
+    }
+  }
+
+  if (!spec.groupBy || spec.groupBy.length === 0) {
+    return { value: metricFor(rows) };
+  }
+
+  const buckets = new Map<string, { key: Record<string, string>; rows: Row[] }>();
+  for (const row of rows) {
+    const key: Record<string, string> = {};
+    for (const fid of spec.groupBy) key[fid] = String(row.data[fid] ?? "");
+    const k = JSON.stringify(key);
+    if (!buckets.has(k)) buckets.set(k, { key, rows: [] });
+    buckets.get(k)!.rows.push(row);
+  }
+
+  const groupBy = spec.groupBy;
+  const groups = Array.from(buckets.values())
+    .map((b) => ({ key: b.key, value: metricFor(b.rows) }))
+    .sort((a, b) => {
+      const f = groupBy[0];
+      return String(a.key[f]).localeCompare(String(b.key[f]));
+    });
+
+  return { groups };
 }
