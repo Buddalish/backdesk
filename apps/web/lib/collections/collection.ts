@@ -169,8 +169,8 @@ export function aggregateRows(
   const groups = Array.from(buckets.values())
     .map((b) => ({ key: b.key, value: metricFor(b.rows) }))
     .sort((a, b) => {
-      const f = groupBy[0];
-      return String(a.key[f]).localeCompare(String(b.key[f]));
+      const f = groupBy[0]!;
+      return String(a.key[f] ?? "").localeCompare(String(b.key[f] ?? ""));
     });
 
   return { groups };
