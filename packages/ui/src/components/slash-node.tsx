@@ -6,6 +6,7 @@ import type { PlateEditor, PlateElementProps } from 'platejs/react';
 
 import { AIChatPlugin } from '@platejs/ai/react';
 import {
+  BarChart2Icon,
   CalendarIcon,
   ChevronRightIcon,
   Code2,
@@ -13,6 +14,7 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
+  LayoutDashboardIcon,
   LightbulbIcon,
   ListIcon,
   ListOrdered,
@@ -20,6 +22,8 @@ import {
   PilcrowIcon,
   Quote,
   RadicalIcon,
+  Rows3Icon,
+  SheetIcon,
   SparklesIcon,
   Square,
   SuperscriptIcon,
@@ -226,6 +230,40 @@ const groups: Group[] = [
       ...item,
       onSelect: (editor, value) => {
         insertInlineElement(editor, value);
+      },
+    })),
+  },
+  {
+    group: 'Data blocks',
+    items: [
+      {
+        icon: <LayoutDashboardIcon />,
+        keywords: ['card', 'kpi', 'metric'],
+        label: 'Card',
+        value: 'card',
+      },
+      {
+        icon: <BarChart2Icon />,
+        keywords: ['chart', 'graph', 'viz'],
+        label: 'Chart',
+        value: 'chart',
+      },
+      {
+        icon: <SheetIcon />,
+        keywords: ['table', 'rows', 'data-table'],
+        label: 'Table',
+        value: 'data-table',
+      },
+      {
+        icon: <Rows3Icon />,
+        keywords: ['row', 'record', 'data-row'],
+        label: 'Row',
+        value: 'data-row',
+      },
+    ].map((item) => ({
+      ...item,
+      onSelect: (editor, value) => {
+        insertBlock(editor, value, { upsert: true });
       },
     })),
   },
