@@ -55,9 +55,9 @@ test("create collection, add a field, add a row", async ({ page }) => {
   // Step 1: add a row via EmptyCollection to make the table visible.
   await page.click("button:has-text('Add row')");
 
-  // revalidatePath marks the RSC stale — reload to get the fresh server render
-  // which will include the new row in initialRows, switching out of EmptyCollection.
-  await page.reload();
+  // The Add row Server Action runs inside startTransition + router.refresh() — wait for
+  // the resulting RSC re-render to mount the table (which carries the AddFieldButton).
+  await page.waitForSelector("table", { timeout: 15000 });
 
   // The table is now visible (rows.length=1). Add a text field via the table header button.
   await page.click("button:has-text('Add field')");
@@ -77,13 +77,10 @@ test("create collection, add a field, add a row", async ({ page }) => {
   // Add another row now that the table is fully visible with the field column.
   await page.click("button:has-text('Add row')");
 
-  // After the second add row, reload to see the updated row list from the server.
-  await page.reload();
-
-  // After the server re-render, tbody should have at least 2 <tr>s:
-  //   - 1+ data rows
-  //   - 1 footer "Add row" row
-  const rowCount = await page.locator("table tbody tr").count();
-  expect(rowCount).toBeGreaterThanOrEqual(2);
+  // Wait for router.refresh to bring the second row in (≥2 data rows + 1 footer "Add row").
+  await expect.poll(
+    async () => page.locator("table tbody tr").count(),
+    { timeout: 10000 },
+  ).toBeGreaterThanOrEqual(3);
   await expect(page.locator("table tbody tr").first()).toBeVisible();
 });
