@@ -124,6 +124,65 @@
     --highlight: oklch(0.852 0.199 91.936);
 }
 
+/* Accent overrides — applied via <html data-accent="..."> from AppearanceForm.
+   Values picked to harmonize with b2fA's near-monochrome base.
+   The "default" accent uses the preset's existing :root/.dark values (no override). */
+
+:root[data-accent="blue"] {
+  --primary: oklch(0.55 0.20 260);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.55 0.20 260);
+}
+.dark[data-accent="blue"] {
+  --primary: oklch(0.70 0.17 260);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.70 0.17 260);
+}
+
+:root[data-accent="emerald"] {
+  --primary: oklch(0.58 0.15 160);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.58 0.15 160);
+}
+.dark[data-accent="emerald"] {
+  --primary: oklch(0.72 0.14 160);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.72 0.14 160);
+}
+
+:root[data-accent="rose"] {
+  --primary: oklch(0.60 0.22 15);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.60 0.22 15);
+}
+.dark[data-accent="rose"] {
+  --primary: oklch(0.72 0.20 15);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.72 0.20 15);
+}
+
+:root[data-accent="amber"] {
+  --primary: oklch(0.70 0.16 70);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.70 0.16 70);
+}
+.dark[data-accent="amber"] {
+  --primary: oklch(0.78 0.14 70);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.78 0.14 70);
+}
+
+:root[data-accent="violet"] {
+  --primary: oklch(0.55 0.22 290);
+  --primary-foreground: oklch(0.985 0 0);
+  --ring: oklch(0.55 0.22 290);
+}
+.dark[data-accent="violet"] {
+  --primary: oklch(0.68 0.20 290);
+  --primary-foreground: oklch(0.205 0 0);
+  --ring: oklch(0.68 0.20 290);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
