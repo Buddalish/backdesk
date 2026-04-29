@@ -1,5 +1,5 @@
 "use client";
-import { useState, useTransition } from "react";
+import { useState, useEffect, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Table, TableHeader, TableRow, TableHead, TableBody, TableCell } from "@workspace/ui/components/table";
 import { Button } from "@workspace/ui/components/button";
@@ -25,6 +25,9 @@ export function CollectionListView({
   initialRows: Row[];
 }) {
   const [rows, setRows] = useState<Row[]>(initialRows);
+  // Sync local state when parent re-renders with fresh server data (e.g., after router.refresh()).
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setRows(initialRows); }, [initialRows]);
   const [, startTransition] = useTransition();
   const router = useRouter();
   const visible = view?.config?.visibleFields?.length
