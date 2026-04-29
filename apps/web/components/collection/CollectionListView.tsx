@@ -9,6 +9,7 @@ import { EmptyCollection } from "./EmptyCollection";
 import { renderCell } from "./cells";
 import { SortPopover } from "./SortPopover";
 import { FilterPopover } from "./FilterPopover";
+import { AddFieldButton } from "./AddFieldButton";
 import { addRow, updateRowField } from "@/actions/collections";
 import { updateView } from "@/actions/views";
 import type { Field, Row, Sort, Filter } from "@/lib/collections/types";
@@ -68,10 +69,7 @@ export function CollectionListView({
             <TableRow>
               {visible.map((f) => <TableHead key={f.id}>{f.name}</TableHead>)}
               <TableHead>
-                <Button variant="ghost" size="sm" onClick={() => { window.prompt("Add field — use AddFieldButton in Task 17"); }}>
-                  <Plus data-icon="inline-start" />
-                  Add field
-                </Button>
+                <AddFieldButton collectionId={collection.id} />
               </TableHead>
             </TableRow>
           </TableHeader>
