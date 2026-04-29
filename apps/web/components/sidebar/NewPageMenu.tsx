@@ -16,6 +16,8 @@ import { toast } from "sonner";
 import { createPage } from "@/actions/pages";
 import { ImportSheet } from "@/components/connections/ImportSheet";
 import { connections } from "@/lib/connections";
+import { templates } from "@/lib/templates";
+import { applyTemplate } from "@/actions/templates";
 
 export function NewPageMenu() {
   const [isPending, startTransition] = useTransition();
@@ -52,7 +54,18 @@ export function NewPageMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>From template</DropdownMenuLabel>
-        <DropdownMenuItem disabled>Templates ship in Plan 3</DropdownMenuItem>
+        {templates.map((t) => (
+          <DropdownMenuItem
+            key={t.id}
+            onClick={() => startTransition(async () => {
+              const result = await applyTemplate({ templateId: t.id });
+              if (!result.ok) { toast.error(result.error.message); return; }
+              router.push(`/p/${result.data.id}`);
+            })}
+          >
+            {t.emoji} {t.name}
+          </DropdownMenuItem>
+        ))}
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Connections</DropdownMenuLabel>
         {connections.map((c) => (
