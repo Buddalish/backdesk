@@ -2,6 +2,20 @@
 
 A workspace for your data. Pages of blocks, collections, connections.
 
+## Features (v1)
+
+- **Pages** — dashboards (Plate.js block editor) or collections (typed list view)
+- **Collections** — text, number, currency, datetime, select, multi-select, checkbox fields
+- **Generic blocks** — Card, Chart, Table, Row blocks read from any collection (configure-after-drop, no separate block per chart type)
+- **IBKR Activity Statement importer** with round-trip trade aggregation (flat → position → flat, with flip handling)
+- **Trading templates** — Performance Dashboard, Daily Journal, Weekly Review (placeholder substitution)
+- **Auth** — email/password and Google OAuth (Supabase)
+- **Settings** — Account (password, sign out, delete), Profile (avatar, name, timezone), Appearance (light/dark mode + accent color), Connections
+- **Cmd+K command palette** — fuzzy-search pages, create new ones, jump to settings
+- **Page emoji picker** — emoji-mart in a popover
+- **Multi-tenant** via Supabase RLS (owner_type/owner_id pattern)
+- **Observability** — Sentry error tracking (PII-stripped), Vercel Analytics, Lighthouse CI gate (a11y ≥ 0.9)
+
 ## Stack
 
 - Next.js 15 (App Router) + shadcn/ui + Plate.js (added in Plan 3)
