@@ -69,4 +69,37 @@ describe("aggregateFillsToTrades", () => {
     expect(trades[0]!.side).toBe("SHORT");
     expect(trades[0]!.gross_pnl).toBe(1000);
   });
+
+  it("dangling open position emitted as open trade", () => {
+    const trades = aggregateFillsToTrades([
+      fill({ side: "BUY", quantity: 100, price: 100, executed_at: "2025-01-01T10:00:00.000Z", source_external_id: "1" }),
+    ]);
+    expect(trades).toHaveLength(1);
+    expect(trades[0]).toMatchObject({
+      symbol: "AAPL",
+      side: "LONG",
+      opened_at: "2025-01-01T10:00:00.000Z",
+      closed_at: null,
+      hold_duration_seconds: null,
+      total_quantity: 100,
+      avg_entry_price: 100,
+      avg_exit_price: null,
+      gross_pnl: null,
+      fees: 1,
+      net_pnl: null,
+      opening_fill_id: "1",
+    });
+  });
+
+  it("scale-in still open emits one open trade with weighted-average entry", () => {
+    const trades = aggregateFillsToTrades([
+      fill({ side: "BUY", quantity: 50, price: 100, executed_at: "2025-01-01T10:00:00.000Z", source_external_id: "1" }),
+      fill({ side: "BUY", quantity: 50, price: 102, executed_at: "2025-01-01T11:00:00.000Z", source_external_id: "2" }),
+    ]);
+    expect(trades).toHaveLength(1);
+    expect(trades[0]!.closed_at).toBeNull();
+    expect(trades[0]!.total_quantity).toBe(100);
+    expect(trades[0]!.avg_entry_price).toBe(101);
+    expect(trades[0]!.fees).toBe(2);
+  });
 });

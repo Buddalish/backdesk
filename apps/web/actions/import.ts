@@ -142,27 +142,31 @@ export async function runImport(formData: FormData) {
   const trades = aggregateFillsToTrades(merged);
 
   // Build trade rows (upsert by stable identity: source_external_id = symbol|opened_at|side|opening_fill_id)
-  const tradeRows = trades.map((t) => ({
-    owner_type: "user",
-    owner_id: user.id,
-    collection_id: tradesCollId,
-    data: {
-      [tradesFieldsByName["Symbol"]!]: t.symbol,
-      [tradesFieldsByName["Side"]!]: t.side,
-      [tradesFieldsByName["Opened at"]!]: t.opened_at,
-      [tradesFieldsByName["Closed at"]!]: t.closed_at,
-      [tradesFieldsByName["Hold duration (s)"]!]: t.hold_duration_seconds,
-      [tradesFieldsByName["Quantity"]!]: t.total_quantity,
-      [tradesFieldsByName["Avg entry price"]!]: { amount: t.avg_entry_price, currency_code: t.currency_code },
-      [tradesFieldsByName["Avg exit price"]!]: { amount: t.avg_exit_price, currency_code: t.currency_code },
-      [tradesFieldsByName["Gross P&L"]!]: { amount: t.gross_pnl, currency_code: t.currency_code },
-      [tradesFieldsByName["Fees"]!]: { amount: t.fees, currency_code: t.currency_code },
-      [tradesFieldsByName["Net P&L"]!]: { amount: t.net_pnl, currency_code: t.currency_code },
-      [tradesFieldsByName["Currency"]!]: t.currency_code,
-    } as Json,
-    source: `connection:${conn.id}`,
-    source_external_id: `${t.symbol}|${t.opened_at}|${t.side}|${t.opening_fill_id}`,
-  }));
+  const tradeRows = trades.map((t) => {
+    const money = (amount: number | null) =>
+      amount === null ? null : { amount, currency_code: t.currency_code };
+    return {
+      owner_type: "user",
+      owner_id: user.id,
+      collection_id: tradesCollId,
+      data: {
+        [tradesFieldsByName["Symbol"]!]: t.symbol,
+        [tradesFieldsByName["Side"]!]: t.side,
+        [tradesFieldsByName["Opened at"]!]: t.opened_at,
+        [tradesFieldsByName["Closed at"]!]: t.closed_at,
+        [tradesFieldsByName["Hold duration (s)"]!]: t.hold_duration_seconds,
+        [tradesFieldsByName["Quantity"]!]: t.total_quantity,
+        [tradesFieldsByName["Avg entry price"]!]: money(t.avg_entry_price),
+        [tradesFieldsByName["Avg exit price"]!]: money(t.avg_exit_price),
+        [tradesFieldsByName["Gross P&L"]!]: money(t.gross_pnl),
+        [tradesFieldsByName["Fees"]!]: money(t.fees),
+        [tradesFieldsByName["Net P&L"]!]: money(t.net_pnl),
+        [tradesFieldsByName["Currency"]!]: t.currency_code,
+      } as Json,
+      source: `connection:${conn.id}`,
+      source_external_id: `${t.symbol}|${t.opened_at}|${t.side}|${t.opening_fill_id}`,
+    };
+  });
 
   const { error: tradesErr, count: tradesAdded } = await supabase
     .from("collection_rows")

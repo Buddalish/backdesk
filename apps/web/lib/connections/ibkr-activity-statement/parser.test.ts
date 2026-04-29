@@ -54,4 +54,44 @@ describe("parseActivityStatement", () => {
     const r = await parseActivityStatement(file, { sourceTimezone: "America/New_York" });
     expect(r.skippedNonStock).toBeGreaterThan(0);
   });
+
+  it("rejects rows with non-numeric T. Price (no silent NaN)", async () => {
+    const csv = `Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,Comm/Fee,TradeID
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-04-15, 09:30:01",100,,-1.00,12345
+`;
+    const file = new File([csv], "bad-price.csv", { type: "text/csv" });
+    await expect(parseActivityStatement(file, { sourceTimezone: "America/New_York" }))
+      .rejects.toThrow(/INVALID_PRICE/);
+  });
+
+  it("rejects rows with non-numeric Comm/Fee", async () => {
+    const csv = `Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,Comm/Fee,TradeID
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-04-15, 09:30:01",100,182.45,n/a,12345
+`;
+    const file = new File([csv], "bad-fee.csv", { type: "text/csv" });
+    await expect(parseActivityStatement(file, { sourceTimezone: "America/New_York" }))
+      .rejects.toThrow(/INVALID_FEE/);
+  });
+
+  it("rejects rows missing the symbol", async () => {
+    const csv = `Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,Comm/Fee,TradeID
+Trades,Data,Execution,Stocks,USD,,"2025-04-15, 09:30:01",100,182.45,-1.00,12345
+`;
+    const file = new File([csv], "no-symbol.csv", { type: "text/csv" });
+    await expect(parseActivityStatement(file, { sourceTimezone: "America/New_York" }))
+      .rejects.toThrow(/MISSING_SYMBOL/);
+  });
+
+  it("synthesizes a stable ID when TradeID is empty (so dedup never collapses two rows)", async () => {
+    const csv = `Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,Comm/Fee,TradeID
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-04-15, 09:30:01",100,182.45,-1.00,
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-04-15, 14:00:01",-100,184.10,-1.00,
+`;
+    const file = new File([csv], "no-tradeid.csv", { type: "text/csv" });
+    const r = await parseActivityStatement(file, { sourceTimezone: "America/New_York" });
+    expect(r.fills).toHaveLength(2);
+    expect(r.fills[0]!.source_external_id).toMatch(/^synth:/);
+    expect(r.fills[1]!.source_external_id).toMatch(/^synth:/);
+    expect(r.fills[0]!.source_external_id).not.toBe(r.fills[1]!.source_external_id);
+  });
 });

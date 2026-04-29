@@ -4,14 +4,16 @@ export type AggregatedTrade = {
   symbol: string;
   side: "LONG" | "SHORT";
   opened_at: string;
-  closed_at: string;
-  hold_duration_seconds: number;
+  // null for trades still open at end of imported data — gets upgraded
+  // to a real timestamp when a closing fill arrives in a later import.
+  closed_at: string | null;
+  hold_duration_seconds: number | null;
   total_quantity: number;
   avg_entry_price: number;
-  avg_exit_price: number;
-  gross_pnl: number;
+  avg_exit_price: number | null;
+  gross_pnl: number | null;
   fees: number;
-  net_pnl: number;
+  net_pnl: number | null;
   currency_code: string;
   opening_fill_id: string;
 };
@@ -123,10 +125,44 @@ export function aggregateFillsToTrades(fills: ParsedFill[]): AggregatedTrade[] {
         position = signedQty({ side: f.side, quantity: leftoverQty });
       }
     }
+
+    // If the symbol ends with an open position, emit it as an open trade so
+    // the user's Trades collection reflects their current portfolio. The
+    // upsert key (symbol|opened_at|side|opening_fill_id) is stable, so a
+    // later re-import that includes the closing fill will UPDATE this row
+    // in place rather than create a duplicate.
+    if (current !== null) {
+      out.push(finalizeOpenTrade(current, currency));
+    }
   }
 
-  out.sort((a, b) => a.closed_at.localeCompare(b.closed_at));
+  out.sort((a, b) => (a.closed_at ?? "9999").localeCompare(b.closed_at ?? "9999"));
   return out;
+}
+
+function finalizeOpenTrade(t: WorkingTrade, currency: string): AggregatedTrade {
+  // Open trade — only entry-side data is known. Exit/P&L fields are null
+  // until a closing fill lands in a later import.
+  const opens = t.fills;
+  const openQty = opens.reduce((a, f) => a + f.quantity, 0);
+  const avgEntry = opens.reduce((a, f) => a + f.price * f.quantity, 0) / openQty;
+  const fees = opens.reduce((a, f) => a + f.fees, 0);
+
+  return {
+    symbol: t.symbol,
+    side: t.side,
+    opened_at: t.opened_at,
+    closed_at: null,
+    hold_duration_seconds: null,
+    total_quantity: openQty,
+    avg_entry_price: avgEntry,
+    avg_exit_price: null,
+    gross_pnl: null,
+    fees,
+    net_pnl: null,
+    currency_code: currency,
+    opening_fill_id: t.fills[0]!.id,
+  };
 }
 
 function finalizeTrade(t: WorkingTrade, currency: string): AggregatedTrade {

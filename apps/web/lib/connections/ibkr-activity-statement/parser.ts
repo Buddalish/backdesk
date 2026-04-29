@@ -58,22 +58,44 @@ export async function parseActivityStatement(
     if (r[idx.discriminator] !== "Execution") continue;
     if (r[idx.assetCategory] !== "Stocks") { skippedNonStock++; continue; }
 
+    const symbol = r[idx.symbol];
+    if (!symbol) throw new Error(`MISSING_SYMBOL: row ${i + 1}`);
+
     const qtyRaw = r[idx.quantity];
+    if (qtyRaw === undefined || qtyRaw.trim() === "") throw new Error(`INVALID_QUANTITY: row ${i + 1}`);
     const qty = Number(qtyRaw);
     if (Number.isNaN(qty)) throw new Error(`INVALID_QUANTITY: row ${i + 1}`);
+
+    const priceRaw = r[idx.price];
+    if (priceRaw === undefined || priceRaw.trim() === "") throw new Error(`INVALID_PRICE: row ${i + 1}`);
+    const price = Number(priceRaw);
+    if (Number.isNaN(price)) throw new Error(`INVALID_PRICE: row ${i + 1}`);
+
+    const feeRaw = r[idx.fee];
+    if (feeRaw === undefined || feeRaw.trim() === "") throw new Error(`INVALID_FEE: row ${i + 1}`);
+    const fee = Number(feeRaw);
+    if (Number.isNaN(fee)) throw new Error(`INVALID_FEE: row ${i + 1}`);
 
     const localDate = parseIBKRDate(r[idx.dateTime] ?? "");
     const utcDate = fromZonedTime(localDate, settings.sourceTimezone);
 
+    const rawTradeId = r[idx.tradeId];
+    // Real IBKR Activity Statements occasionally omit TradeID for some Execution
+    // rows (corporate actions, splits). Synthesize a stable ID rather than
+    // collapse all such rows to "" and trip the dedup unique constraint.
+    const tradeId = rawTradeId && rawTradeId.length > 0
+      ? rawTradeId
+      : `synth:${symbol}:${utcDate.toISOString()}:${qtyRaw}`;
+
     fills.push({
-      symbol: r[idx.symbol] ?? "",
+      symbol,
       side: qty > 0 ? "BUY" : "SELL",
       quantity: Math.abs(qty),
-      price: Number(r[idx.price]),
-      fees: Math.abs(Number(r[idx.fee])),
+      price,
+      fees: Math.abs(fee),
       currency: r[idx.currency] ?? "USD",
       executed_at: utcDate.toISOString(),
-      source_external_id: r[idx.tradeId] ?? "",
+      source_external_id: tradeId,
     });
   }
 
