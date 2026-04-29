@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
+import { PageHeader } from "@/components/pages/PageHeader";
 import { EmptyDashboard } from "@/components/empty/EmptyDashboard";
 
 export default async function DashboardPage({ params }: { params: Promise<{ pageId: string }> }) {
@@ -16,10 +17,7 @@ export default async function DashboardPage({ params }: { params: Promise<{ page
 
   return (
     <div className="max-w-3xl mx-auto py-8">
-      <h1 className="text-3xl font-semibold mb-6">
-        {page.emoji && <span className="mr-2">{page.emoji}</span>}
-        {page.title}
-      </h1>
+      <PageHeader pageId={page.id} initialTitle={page.title} emoji={page.emoji} />
       <EmptyDashboard pageId={page.id} />
     </div>
   );

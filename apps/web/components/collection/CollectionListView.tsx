@@ -39,6 +39,7 @@ export function CollectionListView({
   return (
     <div className="max-w-6xl mx-auto py-6">
       <CollectionHeader
+        pageId={page.id}
         title={page.title}
         emoji={page.emoji}
         onOpenFilters={() => { /* handled by FilterPopover below */ }}
