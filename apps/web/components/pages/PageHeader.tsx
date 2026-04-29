@@ -2,6 +2,7 @@
 import { useState, useTransition } from "react";
 import { renamePage } from "@/actions/pages";
 import { toast } from "sonner";
+import { PageEmojiPicker } from "./PageEmojiPicker";
 
 export function PageHeader({
   pageId,
@@ -28,7 +29,7 @@ export function PageHeader({
 
   return (
     <div className="flex items-center gap-2 mb-6">
-      {emoji && <span className="text-3xl">{emoji}</span>}
+      <PageEmojiPicker pageId={pageId} current={emoji} />
       {editing ? (
         <input
           autoFocus
