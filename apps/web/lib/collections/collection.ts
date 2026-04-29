@@ -153,8 +153,16 @@ export function aggregateRows(
     if (spec.metric.kind === "count") return group.length;
     const fid = spec.metric.fieldId;
     const values = group
-      .map((r) => r.data[fid])
-      .filter((v): v is number => typeof v === "number");
+      .map((r) => {
+        const v = r.data[fid];
+        if (typeof v === "number") return v;
+        // Currency field stores { amount, currency_code } — extract the amount.
+        if (v && typeof v === "object" && !Array.isArray(v) && typeof (v as { amount: unknown }).amount === "number") {
+          return (v as { amount: number }).amount;
+        }
+        return null;
+      })
+      .filter((v): v is number => v !== null);
     if (values.length === 0) return 0;
     switch (spec.metric.kind) {
       case "sum": return values.reduce((a, b) => a + b, 0);
