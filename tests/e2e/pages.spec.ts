@@ -80,7 +80,7 @@ test("create collection, add a field, add a row", async ({ page }) => {
   // After the second add row, reload to see the updated row list from the server.
   await page.reload();
 
-  // After reload, tbody should have at least 2 <tr>s:
+  // After the server re-render, tbody should have at least 2 <tr>s:
   //   - 1+ data rows
   //   - 1 footer "Add row" row
   const rowCount = await page.locator("table tbody tr").count();

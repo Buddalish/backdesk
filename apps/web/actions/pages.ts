@@ -95,7 +95,7 @@ export async function createPage(input: z.infer<typeof CreatePageSchema>) {
     .single();
   if (pErr) return Err("CREATE_FAILED", pErr.message);
 
-  await supabase.from("collection_views").insert({
+  const { error: vErr } = await supabase.from("collection_views").insert({
     owner_type: "user",
     owner_id: user.id,
     collection_id: collection.id,
@@ -105,6 +105,7 @@ export async function createPage(input: z.infer<typeof CreatePageSchema>) {
     is_default: true,
     sort_index: 0,
   });
+  if (vErr) return Err("CREATE_FAILED", vErr.message);
 
   revalidatePath("/", "layout");
   return Result({ id: page.id, collection_id: collection.id });

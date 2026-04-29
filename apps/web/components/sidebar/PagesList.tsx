@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { useTransition } from "react";
+import { useState, useTransition, useEffect } from "react";
 import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
 import { SortableContext, verticalListSortingStrategy, arrayMove, useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
@@ -34,22 +34,30 @@ function PageItem({ page }: { page: PageRow }) {
 }
 
 export function PagesList({ pages: initial }: { pages: PageRow[] }) {
+  const [pages, setPages] = useState(initial);
   const [, startTransition] = useTransition();
+
+  // Sync local state when the server re-renders with a new pages list (e.g., new page added).
+  // This is intentional external-system synchronization (server state → client state), which is
+  // exactly the pattern the react docs describe as valid for effects.
+  // eslint-disable-next-line react-hooks/set-state-in-effect
+  useEffect(() => { setPages(initial); }, [initial]);
 
   function handleDragEnd(event: DragEndEvent) {
     const { active, over } = event;
     if (!over || active.id === over.id) return;
-    const oldIndex = initial.findIndex((p) => p.id === active.id);
-    const newIndex = initial.findIndex((p) => p.id === over.id);
-    const next = arrayMove(initial, oldIndex, newIndex);
+    const oldIndex = pages.findIndex((p) => p.id === active.id);
+    const newIndex = pages.findIndex((p) => p.id === over.id);
+    const next = arrayMove(pages, oldIndex, newIndex);
+    setPages(next);
     startTransition(() => { void reorderPages({ pageIds: next.map((p) => p.id) }); });
   }
 
   return (
     <DndContext collisionDetection={closestCenter} modifiers={[restrictToVerticalAxis]} onDragEnd={handleDragEnd}>
-      <SortableContext items={initial.map((p) => p.id)} strategy={verticalListSortingStrategy}>
+      <SortableContext items={pages.map((p) => p.id)} strategy={verticalListSortingStrategy}>
         <SidebarMenu>
-          {initial.map((p) => <PageItem key={p.id} page={p} />)}
+          {pages.map((p) => <PageItem key={p.id} page={p} />)}
         </SidebarMenu>
       </SortableContext>
     </DndContext>

@@ -50,7 +50,7 @@ export function NewPageMenu() {
         </DropdownMenuGroup>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>From template</DropdownMenuLabel>
-        <DropdownMenuItem disabled>Templates ship in Plan 4</DropdownMenuItem>
+        <DropdownMenuItem disabled>Templates ship in Plan 3</DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Connections</DropdownMenuLabel>
         <DropdownMenuItem disabled>Importers ship in Plan 4</DropdownMenuItem>

@@ -45,8 +45,6 @@ export function CollectionListView({
         pageId={page.id}
         title={page.title}
         emoji={page.emoji}
-        onOpenFilters={() => { /* handled by FilterPopover below */ }}
-        onOpenSort={() => { /* handled by SortPopover below */ }}
       />
 
       <div className="flex gap-2 mb-3">
@@ -101,6 +99,7 @@ export function CollectionListView({
                       setRows((rs) => rs.map((r) => r.id === row.id ? { ...r, data: { ...r.data, [f.id]: v } } : r));
                       const result = await updateRowField({ rowId: row.id, fieldId: f.id, value: v });
                       if (!result.ok) toast.error(result.error.message);
+                      else router.refresh();
                     })}
                   </TableCell>
                 ))}
