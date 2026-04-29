@@ -1748,7 +1748,7 @@ pnpm test:e2e tests/e2e/import.spec.ts
 git add tests/e2e/import.spec.ts
 git commit -m "test(e2e): IBKR import populates Trades collection"
 git push
-gh run watch --repo Alumicraft/backdesk
+gh run watch --repo Buddalish/backdesk
 ```
 
 ---

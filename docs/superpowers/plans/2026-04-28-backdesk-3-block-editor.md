@@ -1744,7 +1744,7 @@ pnpm test:e2e tests/e2e/dashboard.spec.ts
 git add tests/e2e/dashboard.spec.ts
 git commit -m "test(e2e): drop Card block, configure, verify renders"
 git push
-gh run watch --repo Alumicraft/backdesk
+gh run watch --repo Buddalish/backdesk
 ```
 
 ---

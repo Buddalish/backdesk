@@ -8,7 +8,7 @@
 
 **Tech Stack:** Next.js 15, shadcn/ui, Supabase (Auth + Postgres + Storage), Turborepo, pnpm, Tailwind v4, TypeScript, Vitest, Playwright.
 
-**Pre-execution refinement:** Before starting this plan, re-read [docs/superpowers/specs/2026-04-28-backdesk-v1-design.md](../specs/2026-04-28-backdesk-v1-design.md) Sections 1, 2, 3, 5, 14, 18 (Architecture, Vision, System Architecture, Auth/RLS, Project Layout, Accessibility). Verify the GitHub repo exists at `https://github.com/Alumicraft/backdesk.git` (create it if not). Update task 28 with the correct remote URL if it has changed.
+**Pre-execution refinement:** Before starting this plan, re-read [docs/superpowers/specs/2026-04-28-backdesk-v1-design.md](../specs/2026-04-28-backdesk-v1-design.md) Sections 1, 2, 3, 5, 14, 18 (Architecture, Vision, System Architecture, Auth/RLS, Project Layout, Accessibility). Verify the GitHub repo exists at `https://github.com/Buddalish/backdesk.git` (create it if not). Update task 28 with the correct remote URL if it has changed.
 
 ---
 
@@ -1782,7 +1782,7 @@ git commit -m "ci: github actions for typecheck, lint, unit, e2e"
 
 ```bash
 cd /Users/tristanfleming/Documents/Code/Trading
-git remote add origin https://github.com/Alumicraft/backdesk.git
+git remote add origin https://github.com/Buddalish/backdesk.git
 git branch -M main
 ```
 
@@ -1797,7 +1797,7 @@ Expected: branch `main` pushed; first CI run kicks off on the default branch.
 - [ ] **Step 3: Verify CI green**
 
 ```bash
-gh run watch --repo Alumicraft/backdesk
+gh run watch --repo Buddalish/backdesk
 ```
 
 Expected: workflow completes successfully. If anything fails, fix locally, commit, push.

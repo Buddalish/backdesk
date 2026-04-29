@@ -2775,7 +2775,7 @@ git push
 - [ ] **Step 2: Watch CI**
 
 ```bash
-gh run watch --repo Alumicraft/backdesk
+gh run watch --repo Buddalish/backdesk
 ```
 
 Expected: green.
