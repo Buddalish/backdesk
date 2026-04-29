@@ -85,6 +85,7 @@ function applyFiltersInJS(rows: Row[], filters: Filter[], fields: Record<string,
   );
 }
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 function applySortInJS(rows: Row[], sorts: Sort[], _fields: Record<string, Field>): Row[] {
   return [...rows].sort((a, b) => {
     for (const s of sorts) {
