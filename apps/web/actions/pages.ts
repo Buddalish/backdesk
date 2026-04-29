@@ -156,3 +156,36 @@ export async function reorderPages(input: z.infer<typeof ReorderSchema>) {
   revalidatePath("/", "layout");
   return Result({});
 }
+
+const SaveDocSchema = z.object({
+  pageId: z.string().uuid(),
+  document: z.unknown(),
+  expectedUpdatedAt: z.string(),  // ISO from the client's last-known updated_at
+});
+
+export async function savePageDocument(input: z.infer<typeof SaveDocSchema>) {
+  const parsed = SaveDocSchema.safeParse(input);
+  if (!parsed.success) return Err("INVALID_INPUT", parsed.error.issues[0]!.message);
+  const { supabase } = await requireUser();
+
+  // Read current updated_at; reject if it doesn't match
+  const { data: existing } = await supabase
+    .from("pages")
+    .select("updated_at, page_type")
+    .eq("id", parsed.data.pageId)
+    .single();
+  if (!existing) return Err("PAGE_NOT_FOUND", "Page not found");
+  if (existing.page_type !== "dashboard") return Err("WRONG_PAGE_TYPE", "Document only valid on dashboards");
+  if (existing.updated_at !== parsed.data.expectedUpdatedAt) {
+    return Err("STALE_DOCUMENT", "Page was updated elsewhere; refresh and merge.");
+  }
+
+  const { data, error } = await supabase
+    .from("pages")
+    .update({ document: parsed.data.document as unknown as import("@/lib/supabase/types").Json })
+    .eq("id", parsed.data.pageId)
+    .select("updated_at")
+    .single();
+  if (error) return Err("SAVE_FAILED", error.message);
+  return Result({ updated_at: data.updated_at });
+}
