@@ -34,6 +34,183 @@ export type Database = {
   }
   public: {
     Tables: {
+      collection_fields: {
+        Row: {
+          collection_id: string
+          config: Json
+          created_at: string
+          id: string
+          is_system: boolean
+          name: string
+          options: Json
+          owner_id: string
+          owner_type: string
+          sort_index: number
+          type: string
+        }
+        Insert: {
+          collection_id: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_system?: boolean
+          name: string
+          options?: Json
+          owner_id: string
+          owner_type?: string
+          sort_index?: number
+          type: string
+        }
+        Update: {
+          collection_id?: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_system?: boolean
+          name?: string
+          options?: Json
+          owner_id?: string
+          owner_type?: string
+          sort_index?: number
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_fields_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_rows: {
+        Row: {
+          collection_id: string
+          created_at: string
+          data: Json
+          id: string
+          owner_id: string
+          owner_type: string
+          source: string
+          source_external_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          collection_id: string
+          created_at?: string
+          data?: Json
+          id?: string
+          owner_id: string
+          owner_type?: string
+          source?: string
+          source_external_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          collection_id?: string
+          created_at?: string
+          data?: Json
+          id?: string
+          owner_id?: string
+          owner_type?: string
+          source?: string
+          source_external_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_rows_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collection_views: {
+        Row: {
+          collection_id: string
+          config: Json
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          owner_id: string
+          owner_type: string
+          sort_index: number
+          type: string
+        }
+        Insert: {
+          collection_id: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          owner_id: string
+          owner_type?: string
+          sort_index?: number
+          type?: string
+        }
+        Update: {
+          collection_id?: string
+          config?: Json
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          owner_id?: string
+          owner_type?: string
+          sort_index?: number
+          type?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "collection_views_collection_id_fkey"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      collections: {
+        Row: {
+          created_at: string
+          deleted_at: string | null
+          id: string
+          is_system: boolean
+          managed_by_connection: string | null
+          name: string
+          owner_id: string
+          owner_type: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_system?: boolean
+          managed_by_connection?: string | null
+          name: string
+          owner_id: string
+          owner_type?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          deleted_at?: string | null
+          id?: string
+          is_system?: boolean
+          managed_by_connection?: string | null
+          name?: string
+          owner_id?: string
+          owner_type?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           collection_id: string | null
@@ -77,7 +254,15 @@ export type Database = {
           title?: string
           updated_at?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "pages_collection_fk"
+            columns: ["collection_id"]
+            isOneToOne: false
+            referencedRelation: "collections"
+            referencedColumns: ["id"]
+          },
+        ]
       }
       profiles: {
         Row: {
