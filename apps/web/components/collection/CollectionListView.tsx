@@ -7,8 +7,11 @@ import { toast } from "sonner";
 import { CollectionHeader } from "./CollectionHeader";
 import { EmptyCollection } from "./EmptyCollection";
 import { renderCell } from "./cells";
+import { SortPopover } from "./SortPopover";
+import { FilterPopover } from "./FilterPopover";
 import { addRow, updateRowField } from "@/actions/collections";
-import type { Field, Row } from "@/lib/collections/types";
+import { updateView } from "@/actions/views";
+import type { Field, Row, Sort, Filter } from "@/lib/collections/types";
 
 export function CollectionListView({
   page, collection, view, initialRows,
@@ -36,9 +39,26 @@ export function CollectionListView({
       <CollectionHeader
         title={page.title}
         emoji={page.emoji}
-        onOpenFilters={() => { /* Task 16 */ }}
-        onOpenSort={() => { /* Task 16 */ }}
+        onOpenFilters={() => { /* handled by FilterPopover below */ }}
+        onOpenSort={() => { /* handled by SortPopover below */ }}
       />
+
+      <div className="flex gap-2 mb-3">
+        <SortPopover
+          fields={collection.fields}
+          value={(view?.config?.sort as Sort[] | undefined) ?? []}
+          onChange={(next) => { void updateView({ viewId: view.id, config: { sort: next } }); }}
+        >
+          <Button variant="outline" size="sm">Sort</Button>
+        </SortPopover>
+        <FilterPopover
+          fields={collection.fields}
+          value={(view?.config?.filters as Filter[] | undefined) ?? []}
+          onChange={(next) => { void updateView({ viewId: view.id, config: { filters: next } }); }}
+        >
+          <Button variant="outline" size="sm">Filter</Button>
+        </FilterPopover>
+      </div>
 
       {rows.length === 0 && visible.length === 0 ? (
         <EmptyCollection onAddRow={handleAddRow} />
