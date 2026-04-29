@@ -39,3 +39,9 @@ supabase/.temp
 
 # superpowers (brainstorm scratch — already exists)
 .superpowers/
+
+# vercel
+.vercel
+
+# misc
+*.pem
