@@ -1,4 +1,3 @@
-"use client";
 import Link from "next/link";
 import { LogOut, Settings } from "lucide-react";
 import {
@@ -14,8 +13,14 @@ import {
 } from "@workspace/ui/components/sidebar";
 import { Button } from "@workspace/ui/components/button";
 import { signOut } from "@/actions/auth";
+import { listPages } from "@/actions/pages";
+import { PagesList } from "./PagesList";
+import { NewPageMenu } from "./NewPageMenu";
 
-export function AppSidebar() {
+export async function AppSidebar() {
+  const result = await listPages();
+  const pages = result.ok ? result.data : [];
+
   return (
     <Sidebar>
       <SidebarHeader>
@@ -24,9 +29,8 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupContent>
-            <SidebarMenu>
-              {/* Pages list goes here in Plan 2 */}
-            </SidebarMenu>
+            <NewPageMenu />
+            <PagesList pages={pages as { id: string; title: string; emoji: string | null; page_type: "dashboard" | "collection" }[]} />
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
