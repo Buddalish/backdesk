@@ -1,21 +1,37 @@
-# shadcn/ui monorepo template
+# Backdesk
 
-This is a Next.js monorepo template with shadcn/ui.
+A workspace for your data. Pages of blocks, collections, connections.
 
-## Adding components
+## Stack
 
-To add components to your app, run the following command at the root of your `web` app:
+- Next.js 15 (App Router) + shadcn/ui + Plate.js (added in Plan 3)
+- Supabase (Auth + Postgres + Storage)
+- Turborepo + pnpm workspaces
+
+## Local development
+
+Prerequisites: Node 20+, pnpm 9+, Docker, Supabase CLI.
 
 ```bash
-pnpm dlx shadcn@latest add button -c apps/web
+pnpm install
+supabase start
+pnpm db:types
+cp .env.example apps/web/.env.local   # then edit with values from `supabase status`
+pnpm dev
 ```
 
-This will place the ui components in the `packages/ui/src/components` directory.
+Visit http://localhost:3000.
 
-## Using components
+## Scripts
 
-To use the components in your app, import them from the `ui` package.
+- `pnpm dev` — run the app in dev
+- `pnpm build` / `pnpm start`
+- `pnpm test` — unit tests
+- `pnpm test:e2e` — Playwright e2e (requires local Supabase running)
+- `pnpm db:migrate` — apply migrations to local Supabase
+- `pnpm db:types` — regenerate Supabase TypeScript types
 
-```tsx
-import { Button } from "@workspace/ui/components/button";
-```
+## Project layout
+
+See `docs/superpowers/specs/2026-04-28-backdesk-v1-design.md` for the full design.
+Plans live in `docs/superpowers/plans/`.
