@@ -1,4 +1,4 @@
-import { Geist_Mono, Inter, Geist } from "next/font/google"
+import { Geist_Mono, Geist } from "next/font/google"
 
 import "@workspace/ui/globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
