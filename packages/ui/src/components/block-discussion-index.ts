@@ -23,10 +23,7 @@ import {
 } from 'platejs';
 import { useEditorRef, useEditorVersion, usePluginOption } from 'platejs/react';
 
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from '@/components/editor/plugins/discussion-kit';
+import type { TDiscussion } from '@/components/editor/plugins/discussion-types';
 
 import type { TComment } from './comment';
 
@@ -488,7 +485,9 @@ const getDiscussionIndex = (
 
 export const useBlockDiscussionItems = (blockPath: Path) => {
   const editor = useEditorRef();
-  const discussions = usePluginOption(discussionPlugin, 'discussions');
+  // Use the plugin key string instead of the plugin reference to avoid a circular
+  // import: block-discussion-index → discussion-kit → block-discussion → block-discussion-index
+  const discussions = usePluginOption({ key: 'discussion' }, 'discussions') as TDiscussion[];
   const version = useEditorVersion() ?? 0;
 
   return React.useMemo(() => {

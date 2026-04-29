@@ -47,10 +47,8 @@ import {
 } from '@workspace/ui/components/dropdown-menu';
 import { cn } from '@workspace/ui/lib/utils';
 import { BasicMarksKit } from '@workspace/ui/components/editor/plugins/basic-marks-kit';
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from '@workspace/ui/components/editor/plugins/discussion-kit';
+import type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-types';
+import { discussionPlugin } from '@workspace/ui/components/editor/plugins/discussion-kit';
 
 import { Editor, EditorContainer } from './editor';
 

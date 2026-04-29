@@ -9,10 +9,8 @@ import { useEditorPlugin, usePluginOption } from 'platejs/react';
 
 import { Avatar, AvatarFallback, AvatarImage } from '@workspace/ui/components/avatar';
 import { Button } from '@workspace/ui/components/button';
-import {
-  type TDiscussion,
-  discussionPlugin,
-} from '@workspace/ui/components/editor/plugins/discussion-kit';
+import type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-types';
+import { discussionPlugin } from '@workspace/ui/components/editor/plugins/discussion-kit';
 
 import { Comment, CommentCreateForm, formatCommentDate } from './comment';
 import {

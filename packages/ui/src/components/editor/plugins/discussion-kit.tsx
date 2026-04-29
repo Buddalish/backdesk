@@ -1,19 +1,12 @@
 'use client';
 
-import type { TComment } from '@workspace/ui/components/comment';
-
 import { createPlatePlugin } from 'platejs/react';
 
 import { BlockDiscussion } from '@workspace/ui/components/block-discussion';
 
-export type TDiscussion = {
-  id: string;
-  comments: TComment[];
-  createdAt: Date;
-  isResolved: boolean;
-  userId: string;
-  documentContent?: string;
-};
+// Re-export from the dedicated types file so existing consumers keep working.
+export type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-types';
+import type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-types';
 
 const BLOCK_SUGGESTION_SELECTOR = '[data-block-suggestion="true"]';
 

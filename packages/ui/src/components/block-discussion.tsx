@@ -24,7 +24,7 @@ import {
   PopoverTrigger,
 } from '@workspace/ui/components/popover';
 import { commentPlugin } from '@workspace/ui/components/editor/plugins/comment-kit';
-import type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-kit';
+import type { TDiscussion } from '@workspace/ui/components/editor/plugins/discussion-types';
 import { useBlockDiscussionItems } from '@workspace/ui/components/block-discussion-index';
 import { suggestionPlugin } from '@workspace/ui/components/editor/plugins/suggestion-kit';
 
