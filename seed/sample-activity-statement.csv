@@ -1,0 +1,23 @@
+Statement,Header,Field Name,Field Value
+Statement,Data,BrokerName,Interactive Brokers
+Account Information,Header,Field Name,Field Value
+Account Information,Data,Account,U1234567
+Trades,Header,DataDiscriminator,Asset Category,Currency,Symbol,Date/Time,Quantity,T. Price,Comm/Fee,TradeID
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-02-01, 09:32:14",100,180.50,-1.00,T0001
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-02-01, 14:45:00",-100,184.20,-1.00,T0002
+Trades,Data,Execution,Stocks,USD,NVDA,"2025-02-03, 10:00:00",50,720.00,-1.00,T0003
+Trades,Data,Execution,Stocks,USD,NVDA,"2025-02-04, 11:30:00",-50,745.00,-1.00,T0004
+Trades,Data,Execution,Stocks,USD,SPY,"2025-02-05, 09:35:00",-200,495.00,-2.00,T0005
+Trades,Data,Execution,Stocks,USD,SPY,"2025-02-05, 15:50:00",200,491.00,-2.00,T0006
+Trades,Data,Execution,Stocks,USD,TSLA,"2025-02-06, 09:45:00",30,200.00,-1.00,T0007
+Trades,Data,Execution,Stocks,USD,TSLA,"2025-02-06, 13:00:00",-30,196.00,-1.00,T0008
+Trades,Data,Execution,Stocks,USD,MSFT,"2025-02-10, 10:00:00",50,400.00,-1.00,T0009
+Trades,Data,Execution,Stocks,USD,MSFT,"2025-02-10, 11:00:00",50,402.00,-1.00,T0010
+Trades,Data,Execution,Stocks,USD,MSFT,"2025-02-10, 15:00:00",-100,405.00,-2.00,T0011
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-02-12, 09:32:14",100,182.00,-1.00,T0012
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-02-12, 11:32:14",-200,184.00,-1.00,T0013
+Trades,Data,Execution,Stocks,USD,AAPL,"2025-02-12, 13:32:14",100,183.50,-1.00,T0014
+Trades,SubTotal,,Stocks,USD,,,,,0,-15.00,
+Trades,Total,,,USD,,,,,0,-15.00,
+Open Positions,Header,Asset Category,Symbol,Quantity
+Open Positions,Data,Stocks,,0
