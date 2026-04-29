@@ -48,3 +48,9 @@ jobs:
 
       - name: E2E
         run: pnpm test:e2e
+
+      - name: Build for Lighthouse
+        run: pnpm --filter web build
+
+      - name: Lighthouse CI
+        run: pnpm dlx @lhci/cli@latest autorun
