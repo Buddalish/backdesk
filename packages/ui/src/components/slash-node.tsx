@@ -14,6 +14,7 @@ import {
   Heading1Icon,
   Heading2Icon,
   Heading3Icon,
+  ImageIcon,
   LayoutDashboardIcon,
   LightbulbIcon,
   ListIcon,
@@ -259,6 +260,12 @@ const groups: Group[] = [
         keywords: ['row', 'record', 'data-row'],
         label: 'Row',
         value: 'data-row',
+      },
+      {
+        icon: <ImageIcon />,
+        keywords: ['image', 'upload', 'screenshot'],
+        label: 'Image',
+        value: 'uploaded-image',
       },
     ].map((item) => ({
       ...item,
