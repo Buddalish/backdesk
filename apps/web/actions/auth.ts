@@ -72,3 +72,17 @@ export async function requestPasswordReset(formData: FormData) {
 
   return { ok: true as const, data: { sent: true } };
 }
+
+export async function signInWithGoogle() {
+  const supabase = await createClient();
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider: "google",
+    options: {
+      redirectTo: `${process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3000"}/callback`,
+    },
+  });
+  if (error || !data.url) {
+    return { ok: false as const, error: { code: "OAUTH_FAILED", message: error?.message ?? "Failed to initiate Google sign-in" } };
+  }
+  redirect(data.url);
+}
