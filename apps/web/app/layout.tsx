@@ -1,3 +1,4 @@
+import type { Metadata } from "next"
 import { Geist_Mono, Geist } from "next/font/google"
 import { Analytics } from "@vercel/analytics/next"
 
@@ -7,6 +8,11 @@ import { Toaster } from "@workspace/ui/components/sonner"
 import { TooltipProvider } from "@workspace/ui/components/tooltip"
 import { cn } from "@workspace/ui/lib/utils";
 import { createClient } from "@/lib/supabase/server";
+
+export const metadata: Metadata = {
+  title: { default: "Backdesk", template: "%s · Backdesk" },
+  description: "A workspace for your data. Pages of blocks, collections, connections.",
+};
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'})
 
