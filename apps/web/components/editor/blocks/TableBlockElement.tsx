@@ -28,6 +28,7 @@ export function TableBlockElement(props: any) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     if (!cfg.collectionId) { setLoading(false); return; }
     let cancelled = false;
     setLoading(true);
