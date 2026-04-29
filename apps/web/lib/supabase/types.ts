@@ -211,6 +211,54 @@ export type Database = {
         }
         Relationships: []
       }
+      connection_imports: {
+        Row: {
+          connection: string
+          error_message: string | null
+          filename: string | null
+          id: string
+          imported_at: string
+          owner_id: string
+          owner_type: string
+          pipeline_rows_created: number
+          pipeline_rows_updated: number
+          rows_added: number
+          rows_skipped_duplicate: number
+          rows_skipped_unsupported: number
+          status: string
+        }
+        Insert: {
+          connection: string
+          error_message?: string | null
+          filename?: string | null
+          id?: string
+          imported_at?: string
+          owner_id: string
+          owner_type?: string
+          pipeline_rows_created?: number
+          pipeline_rows_updated?: number
+          rows_added?: number
+          rows_skipped_duplicate?: number
+          rows_skipped_unsupported?: number
+          status: string
+        }
+        Update: {
+          connection?: string
+          error_message?: string | null
+          filename?: string | null
+          id?: string
+          imported_at?: string
+          owner_id?: string
+          owner_type?: string
+          pipeline_rows_created?: number
+          pipeline_rows_updated?: number
+          rows_added?: number
+          rows_skipped_duplicate?: number
+          rows_skipped_unsupported?: number
+          status?: string
+        }
+        Relationships: []
+      }
       pages: {
         Row: {
           collection_id: string | null
