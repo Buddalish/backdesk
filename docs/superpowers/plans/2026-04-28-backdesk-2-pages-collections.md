@@ -10,6 +10,15 @@
 
 **Pre-execution refinement:** Before starting, re-read spec [Sections 4 (Data model), 8 (Pages), 9 (Collection list view), 10 (Sidebar)](../specs/2026-04-28-backdesk-v1-design.md). Verify Plan 1 landed all foundational shadcn components; if `dropdown-menu`, `popover`, `select`, `command`, `calendar`, `checkbox`, `badge`, `combobox`, `table`, `sheet`, `alert-dialog`, `tooltip`, `empty` are not present, add them in Task 1.
 
+**Refinement notes from Plan 1 execution (2026-04-29):**
+- `sheet` and `tooltip` are already installed from Plan 1 — `pnpm dlx shadcn@latest add ... --yes` will skip them cleanly.
+- `eslint-plugin-only-warn` was removed in Plan 1 cleanup — ESLint errors now actually fail CI. Implementers must fix lint errors as they go (common: unused imports, unescaped apostrophes in JSX text — use `&apos;`).
+- Supabase clients (`apps/web/lib/supabase/{browser,server,admin}.ts`) already use the `Database` generic — wire collection queries through the typed client for free type safety.
+- Migration filenames: use deterministic timestamps (`20260429000001_pages.sql`) instead of auto-generated, to keep cross-machine ordering stable. Pattern established in Plan 1.
+- After major route additions (`/p/[pageId]`, `/c/[pageId]`), run `pnpm --filter web build` to catch route conflicts that typecheck misses.
+- The `Collection.load()` static method (Task 7) only selects `id, name` from `collections`. Plan 4 will need to extend the select to include `managed_by_connection` so Task 14's "Import" button condition resolves. For Plan 2 the button stays hidden — that's correct (no connections yet).
+- Verbatim plan code can skip the formal code-quality review when the implementer reports clean typecheck + lint + tests. Use code-quality review only when the implementer made meaningful design choices.
+
 ---
 
 ## File structure created in this plan
