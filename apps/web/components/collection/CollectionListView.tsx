@@ -10,6 +10,7 @@ import { renderCell } from "./cells";
 import { SortPopover } from "./SortPopover";
 import { FilterPopover } from "./FilterPopover";
 import { AddFieldButton } from "./AddFieldButton";
+import { FieldHeader } from "./FieldHeader";
 import { addRow, updateRowField } from "@/actions/collections";
 import { updateView } from "@/actions/views";
 import type { Field, Row, Sort, Filter } from "@/lib/collections/types";
@@ -67,7 +68,21 @@ export function CollectionListView({
         <Table>
           <TableHeader>
             <TableRow>
-              {visible.map((f) => <TableHead key={f.id}>{f.name}</TableHead>)}
+              {visible.map((f) => (
+                <TableHead key={f.id}>
+                  <FieldHeader
+                    field={f}
+                    sortDir={(view?.config?.sort as Sort[] | undefined)?.find((s) => s.fieldId === f.id)?.direction ?? null}
+                    onClickSort={() => {
+                      const sortArr = (view?.config?.sort as Sort[] | undefined) ?? [];
+                      const cur = sortArr.find((s) => s.fieldId === f.id);
+                      const nextDir: "asc" | "desc" | null = !cur ? "asc" : cur.direction === "asc" ? "desc" : null;
+                      const next = nextDir === null ? [] : [{ fieldId: f.id, direction: nextDir }];
+                      void updateView({ viewId: view.id, config: { sort: next } });
+                    }}
+                  />
+                </TableHead>
+              ))}
               <TableHead>
                 <AddFieldButton collectionId={collection.id} />
               </TableHead>
