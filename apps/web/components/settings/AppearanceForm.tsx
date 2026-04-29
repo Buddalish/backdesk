@@ -33,7 +33,8 @@ export function AppearanceForm({
     document.documentElement.setAttribute("data-accent", accent);
   }, [accent]);
 
-  function commit(mode: Mode, acc: Accent) {
+  function commit(mode: Mode | undefined, acc: Accent) {
+    if (!mode) return; // wait for next-themes to hydrate before writing to DB
     startTransition(async () => {
       const result = await updateAppearance({ theme_mode: mode, theme_accent: acc });
       if (!result.ok) toast.error(result.error.message);
@@ -68,7 +69,7 @@ export function AppearanceForm({
             <button
               key={a}
               type="button"
-              onClick={() => { setAccent(a); commit((theme as Mode | undefined) ?? "system", a); }}
+              onClick={() => { setAccent(a); commit(theme as Mode | undefined, a); }}
               className={`size-8 rounded-full border-2 transition ${accent === a ? "border-foreground" : "border-transparent"}`}
               style={{ backgroundColor: SWATCHES[a] }}
               aria-label={a}
