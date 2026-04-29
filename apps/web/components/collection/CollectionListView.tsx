@@ -6,8 +6,9 @@ import { Plus } from "lucide-react";
 import { toast } from "sonner";
 import { CollectionHeader } from "./CollectionHeader";
 import { EmptyCollection } from "./EmptyCollection";
-import { addRow, addField } from "@/actions/collections";
-import type { Field, Row, FieldType } from "@/lib/collections/types";
+import { renderCell } from "./cells";
+import { addRow, updateRowField } from "@/actions/collections";
+import type { Field, Row } from "@/lib/collections/types";
 
 export function CollectionListView({
   page, collection, view, initialRows,
@@ -17,7 +18,7 @@ export function CollectionListView({
   view: { id: string; config: { sort?: unknown; filters?: unknown; visibleFields?: string[] } };
   initialRows: Row[];
 }) {
-  const [rows] = useState<Row[]>(initialRows);
+  const [rows, setRows] = useState<Row[]>(initialRows);
   const [, startTransition] = useTransition();
   const visible = view?.config?.visibleFields?.length
     ? collection.fields.filter((f) => view.config.visibleFields!.includes(f.id))
@@ -26,17 +27,6 @@ export function CollectionListView({
   function handleAddRow() {
     startTransition(async () => {
       const result = await addRow({ collectionId: collection.id, data: {} });
-      if (!result.ok) { toast.error(result.error.message); return; }
-    });
-  }
-
-  function handleAddField() {
-    const name = window.prompt("Field name?")?.trim();
-    if (!name) return;
-    const type = window.prompt("Field type? (text|number|currency|date|datetime|select|multi_select|checkbox)", "text")?.trim();
-    if (!type) return;
-    startTransition(async () => {
-      const result = await addField({ collectionId: collection.id, name, type: type as FieldType, options: [], config: {} });
       if (!result.ok) { toast.error(result.error.message); return; }
     });
   }
@@ -58,7 +48,7 @@ export function CollectionListView({
             <TableRow>
               {visible.map((f) => <TableHead key={f.id}>{f.name}</TableHead>)}
               <TableHead>
-                <Button variant="ghost" size="sm" onClick={handleAddField}>
+                <Button variant="ghost" size="sm" onClick={() => { window.prompt("Add field — use AddFieldButton in Task 17"); }}>
                   <Plus data-icon="inline-start" />
                   Add field
                 </Button>
@@ -70,8 +60,11 @@ export function CollectionListView({
               <TableRow key={row.id}>
                 {visible.map((f) => (
                   <TableCell key={f.id}>
-                    {/* renderCell wired up in Task 15 */}
-                    {String(row.data[f.id] ?? "")}
+                    {renderCell(f, row.data[f.id] ?? null, async (v) => {
+                      setRows((rs) => rs.map((r) => r.id === row.id ? { ...r, data: { ...r.data, [f.id]: v } } : r));
+                      const result = await updateRowField({ rowId: row.id, fieldId: f.id, value: v });
+                      if (!result.ok) toast.error(result.error.message);
+                    })}
                   </TableCell>
                 ))}
                 <TableCell />
