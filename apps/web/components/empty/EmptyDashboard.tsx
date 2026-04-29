@@ -1,5 +1,6 @@
 import { Empty } from "@workspace/ui/components/empty";
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function EmptyDashboard({ pageId: _ }: { pageId: string }) {
   return (
     <Empty>
