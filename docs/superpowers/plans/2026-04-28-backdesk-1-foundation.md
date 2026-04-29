@@ -160,7 +160,7 @@ Expected: commit succeeds; `git log --oneline` shows one commit.
 
 ```bash
 cd /Users/tristanfleming/Documents/Code/Trading
-npx shadcn@latest init --name backdesk --template next --preset b2oWqHU1I --monorepo --yes
+npx shadcn@latest init --name backdesk --template next --preset b2fA --monorepo --yes
 ```
 
 Expected: CLI creates `apps/web/`, `packages/ui/`, `packages/eslint-config/`, `packages/typescript-config/`, plus root `package.json`, `pnpm-workspace.yaml`, `turbo.json`. Installs dependencies.
@@ -187,7 +187,7 @@ Expected: `"packageManager": "pnpm@..."`, and `apps/web/components.json` aliases
 
 ```bash
 git add .
-git commit -m "chore: scaffold shadcn monorepo with --preset b2oWqHU1I"
+git commit -m "chore: scaffold shadcn monorepo with --preset b2fA"
 ```
 
 ---

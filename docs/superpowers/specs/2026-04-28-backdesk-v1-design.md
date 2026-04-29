@@ -725,7 +725,7 @@ Layout: shared settings layout with a `Sidebar` (sub-navigation) on the left and
 - **Theme mode**: Light / Dark / System (`ToggleGroup`), persisted via `next-themes` and to `profiles.theme_mode`
 - **Accent color**: 6 swatches (`default`, `blue`, `emerald`, `rose`, `amber`, `violet`), persisted to `profiles.theme_accent`
   - Implementation: `<html data-accent={accent}>`; CSS rules in the global stylesheet override `--primary`, `--ring`, `--accent` variables for each `[data-accent="..."]` selector
-  - Default = `default`, which uses the `--primary` from the project's preset (`b2oWqHU1I`); other accents override `--primary`/`--ring`/`--accent` only
+  - Default = `default`, which uses the `--primary` from the project's preset (`b2fA`); other accents override `--primary`/`--ring`/`--accent` only
 - **Theme preset**: only one preset in v1 (no preset picker UI)
 
 ### `/settings/connections`
@@ -831,7 +831,7 @@ v1 ships one connection: `ibkr-activity-statement`. It produces two collections 
 
 ```bash
 # Run inside /Users/tristanfleming/Documents/Code/Trading/
-npx shadcn@latest init --name backdesk --template next --preset b2oWqHU1I --monorepo
+npx shadcn@latest init --name backdesk --template next --preset b2fA --monorepo
 ```
 
 This creates a Turborepo + pnpm-workspaces monorepo with:
