@@ -34,6 +34,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      pages: {
+        Row: {
+          collection_id: string | null
+          created_at: string
+          deleted_at: string | null
+          document: Json | null
+          emoji: string | null
+          id: string
+          owner_id: string
+          owner_type: string
+          page_type: string
+          sort_index: number
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          collection_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          document?: Json | null
+          emoji?: string | null
+          id?: string
+          owner_id: string
+          owner_type?: string
+          page_type: string
+          sort_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          collection_id?: string | null
+          created_at?: string
+          deleted_at?: string | null
+          document?: Json | null
+          emoji?: string | null
+          id?: string
+          owner_id?: string
+          owner_type?: string
+          page_type?: string
+          sort_index?: number
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_path: string | null
