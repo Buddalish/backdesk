@@ -1,5 +1,5 @@
 "use client";
-import { useTransition } from "react";
+import { useState, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import {
@@ -21,6 +21,7 @@ import { applyTemplate } from "@/actions/templates";
 
 export function NewPageMenu() {
   const [isPending, startTransition] = useTransition();
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const router = useRouter();
 
   function newDashboard() {
@@ -39,7 +40,7 @@ export function NewPageMenu() {
   }
 
   return (
-    <DropdownMenu>
+    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" size="sm" className="w-full justify-start" disabled={isPending}>
           <Plus data-icon="inline-start" />
@@ -69,7 +70,11 @@ export function NewPageMenu() {
         <DropdownMenuSeparator />
         <DropdownMenuLabel>Connections</DropdownMenuLabel>
         {connections.map((c) => (
-          <ImportSheet key={c.id} defaultConnectionId={c.id}>
+          <ImportSheet
+            key={c.id}
+            defaultConnectionId={c.id}
+            onClose={() => setDropdownOpen(false)}
+          >
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
               Import — {c.displayName}
             </DropdownMenuItem>

@@ -13,9 +13,11 @@ import { connections } from "@/lib/connections";
 
 export function ImportSheet({
   defaultConnectionId,
+  onClose,
   children,
 }: {
   defaultConnectionId?: string;
+  onClose?: () => void;
   children: React.ReactNode;
 }) {
   const [open, setOpen] = useState(false);
@@ -24,6 +26,11 @@ export function ImportSheet({
   const [file, setFile] = useState<File | null>(null);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+
+  function handleOpenChange(next: boolean) {
+    setOpen(next);
+    if (!next) onClose?.();
+  }
 
   function submit() {
     if (!file) return;
@@ -36,13 +43,14 @@ export function ImportSheet({
       if (!result.ok) { toast.error(result.error.message); return; }
       toast.success(`Imported ${result.data.fillsAdded} fills, created ${result.data.tradesAdded} trades.`);
       setOpen(false);
+      onClose?.();
       setFile(null);
       router.refresh();
     });
   }
 
   return (
-    <Sheet open={open} onOpenChange={setOpen}>
+    <Sheet open={open} onOpenChange={handleOpenChange}>
       <SheetTrigger asChild>{children}</SheetTrigger>
       <SheetContent>
         <SheetHeader><SheetTitle>Import data</SheetTitle></SheetHeader>
