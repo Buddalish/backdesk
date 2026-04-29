@@ -1,0 +1,41 @@
+# dependencies
+node_modules
+.pnp
+.pnp.js
+.yarn/install-state.gz
+
+# build outputs
+.next/
+.turbo/
+dist/
+build/
+out/
+
+# testing
+coverage/
+playwright-report/
+test-results/
+playwright/.cache/
+
+# env
+.env
+.env*.local
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# editor
+.vscode/
+.idea/
+.DS_Store
+*.swp
+
+# supabase
+supabase/.branches
+supabase/.temp
+
+# superpowers (brainstorm scratch — already exists)
+.superpowers/
